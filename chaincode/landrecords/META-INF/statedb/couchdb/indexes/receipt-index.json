@@ -1,0 +1,7 @@
+{
+  "index": {
+    "fields": ["receiptNumber"]
+  },
+  "name": "receipt-index",
+  "type": "json"
+}

@@ -1,0 +1,977 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{abstract}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{url}
+
+% Page geometry
+\geometry{margin=1in}
+
+% Colors for code highlighting
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% Code highlighting setup
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    frame=none
+}
+
+\lstset{style=mystyle}
+
+% Header and footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{\textit{E-Land Records Management System}}
+
+% Title formatting
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\itshape}{\thesubsubsection}{1em}{}
+
+\title{E-Land Records Management System: A Blockchain-Based Land Administration Platform}
+\author{Rajesh Byreddy}
+\date{\today}
+
+\begin{document}
+
+\begin{titlepage}
+\centering
+
+\includegraphics[width=2in]{nitw_logo.png}
+
+\vspace{1cm}
+
+{\Huge \textbf{E-Land Records Management System: A Blockchain-Based Land Administration Platform}}
+
+\vspace{1cm}
+
+{\Large Submitted by:}
+
+\vspace{0.5cm}
+
+Rathode Shanker - 23MCF1R34 \\
+Kulakarni Shiva - 23MCF1R21 \\
+Kampasati Koteswara Rao - 23MCF1R18 \\
+Byreddy Rajesh - 23MCF1R08 \\
+
+\vspace{1cm}
+
+{\Large Under the guidance of}
+
+\vspace{0.5cm}
+
+Prof. E. Suresh Babu \\
+Department of Computer Science and Engineering \\
+National Institute of Technology, Warangal \\
+
+\vspace{1cm}
+
+{\today}
+
+\end{titlepage}
+
+\begin{abstract}
+This comprehensive report presents the design, implementation, and deployment of an E-Land Records Management System built on Hyperledger Fabric blockchain technology. The system provides a secure, transparent, and efficient platform for land record management with role-based access control across multiple government organizations. The implementation includes a Next.js web application, Node.js API server, and custom chaincode for blockchain operations, ensuring immutable audit trails and decentralized data integrity.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+\subsection{Project Overview}
+The E-Land Records Management System is a comprehensive digital solution for land administration that leverages blockchain technology to ensure transparency, security, and immutability of land records. The system addresses critical challenges in traditional land management systems including data tampering, lack of transparency, and inefficient approval workflows.
+
+\subsection{Objectives}
+\begin{itemize}
+    \item Implement a secure land records management system using Hyperledger Fabric
+    \item Provide role-based access control for different government officials
+    \item Ensure data integrity and immutability through blockchain technology
+    \item Create an intuitive web interface for users and officials
+    \item Enable efficient document management with IPFS integration
+    \item Implement automated workflow for land application processing
+\end{itemize}
+
+\subsection{Key Features}
+\begin{itemize}
+    \item \textbf{Dual Authentication System}: Separate login portals for citizens and government officials
+    \item \textbf{Role-Based Access Control}: 11 distinct official roles with specific permissions
+    \item \textbf{Blockchain Integration}: All critical operations recorded on Hyperledger Fabric
+    \item \textbf{Document Management}: IPFS integration for secure document storage
+    \item \textbf{Real-time Workflow}: Automated approval hierarchy with status tracking
+    \item \textbf{Patta Certificate Generation}: Automated certificate creation and distribution
+    \item \textbf{Mobile-Responsive Design}: Accessible across all devices
+\end{itemize}
+
+\section{System Architecture}
+
+\subsection{Overall Architecture}
+The system follows a three-tier architecture with clear separation of concerns:
+
+\begin{enumerate}
+    \item \textbf{Presentation Layer}: Next.js web application with React components
+    \item \textbf{Application Layer}: Express.js API servers for business logic
+    \item \textbf{Data Layer}: MongoDB for operational data and Hyperledger Fabric for immutable records
+\end{enumerate}
+
+\subsection{Technology Stack}
+
+\subsubsection{Frontend Technologies}
+\begin{itemize}
+    \item \textbf{Next.js 16.0.3}: React framework for server-side rendering and API routes
+    \item \textbf{React 19.2.0}: Component-based UI development
+    \item \textbf{Tailwind CSS 4.0}: Utility-first CSS framework
+    \item \textbf{TypeScript 5.0}: Type-safe JavaScript development
+    \item \textbf{React Icons}: Icon library for UI components
+\end{itemize}
+
+\subsubsection{Backend Technologies}
+\begin{itemize}
+    \item \textbf{Node.js}: Runtime environment for server-side applications
+    \item \textbf{Express.js}: Web application framework
+    \item \textbf{MongoDB/Mongoose}: NoSQL database and ODM
+    \item \textbf{Hyperledger Fabric 2.5}: Enterprise blockchain platform
+    \item \textbf{Fabric SDK}: Client libraries for blockchain interaction
+\end{itemize}
+
+\subsubsection{Supporting Technologies}
+\begin{itemize}
+    \item \textbf{IPFS/Pinata}: Decentralized file storage
+    \item \textbf{Puppeteer}: PDF generation for certificates
+    \item \textbf{Nodemailer}: Email notifications
+    \item \textbf{Bcrypt}: Password hashing
+    \item \textbf{JWT}: Session management
+\end{itemize}
+
+\subsection{Network Architecture}
+The Hyperledger Fabric network consists of three organizations representing different government hierarchies:
+
+\begin{itemize}
+    \item \textbf{Org1}: Administrative roles (Clerk, Superintendent, Project Officer)
+    \item \textbf{Org2}: Field operations (MRO, Surveyor, Revenue Inspector, VRO)
+    \item \textbf{Org3}: Executive roles (Revenue Dept Officer, Joint Collector, District Collector, Ministry Welfare)
+\end{itemize}
+
+\section{Database Design}
+
+\subsection{MongoDB Collections}
+
+\subsubsection{User Collection}
+\begin{lstlisting}[language=javascript]
+{
+  _id: ObjectId,
+  firstName: String,
+  middleName: String,
+  lastName: String,
+  email: String (unique),
+  phoneNumber: String,
+  password: String (hashed),
+  dateOfBirth: Date,
+  createdAt: Date,
+  updatedAt: Date
+}
+\end{lstlisting}
+
+\subsubsection{Official Collection}
+\begin{lstlisting}[language=javascript]
+{
+  _id: ObjectId,
+  firstName: String,
+  lastName: String,
+  email: String (unique),
+  phoneNumber: String,
+  password: String (hashed),
+  designation: String,
+  officeId: String,
+  createdAt: Date,
+  updatedAt: Date
+}
+\end{lstlisting}
+
+\subsubsection{LandRequest Collection}
+\begin{lstlisting}[language=javascript]
+{
+  _id: ObjectId,
+  txnId: String,
+  nature: String,
+  createdBy: String,
+  // Personal Details
+  fullName: String,
+  email: String,
+  phoneNumber: String,
+  aadharNumber: String,
+  dob: Date,
+  // Land Details
+  ownerName: String,
+  surveyNumber: String,
+  area: String,
+  address: String,
+  state: String,
+  city: String,
+  pincode: String,
+  // Documents
+  ipfsHash: String,
+  receiptNumber: String,
+  // Status
+  status: String,
+  currentlyWith: String,
+  // Patta Details
+  pattaHash: String,
+  pattaNumber: String,
+  certificateNumber: String,
+  pattaGeneratedAt: Date,
+  // Survey Data
+  surveyData: Object,
+  fieldPhotos: Array,
+  surveyRemarks: String,
+  // Action History
+  actionHistory: Array,
+  createdAt: Date,
+  updatedAt: Date
+}
+\end{lstlisting}
+
+\subsection{Blockchain Data Structure}
+The blockchain stores land request data with the following structure:
+
+\begin{lstlisting}[language=json]
+{
+  "receiptNumber": "LR-ABC123",
+  "status": "completed",
+  "currentlyWith": "official_id",
+  "createdAt": "2025-11-24T10:00:00.000Z",
+  "history": [
+    {
+      "txn_id": "TXN-123456",
+      "officialId": "official_id",
+      "officialName": "Official Name",
+      "designation": "clerk",
+      "action": "approved",
+      "remarks": "Approved by clerk",
+      "timestamp": "2025-11-24T10:00:00.000Z",
+      "data": {}
+    }
+  ]
+}
+\end{lstlisting}
+
+\section{Chaincode Implementation}
+
+\subsection{Chaincode Structure}
+The land records chaincode is implemented in Node.js using Fabric Contract API:
+
+\begin{lstlisting}[language=javascript]
+const { Contract } = require('fabric-contract-api');
+
+class LandRecordContract extends Contract {
+    // Contract methods
+}
+\end{lstlisting}
+
+\subsection{Core Functions}
+
+\subsubsection{createLandRequest}
+Creates a new land request on the blockchain:
+\begin{itemize}
+    \item Validates receipt number uniqueness
+    \item Parses and validates input data
+    \item Initializes status and history
+    \item Stores data immutably on blockchain
+\end{itemize}
+
+\subsubsection{updateLandStatus}
+Updates the status of a land request:
+\begin{itemize}
+    \item Verifies request existence
+    \item Updates status and assignee
+    \item Adds action to history with transaction ID
+    \item Maintains audit trail
+\end{itemize}
+
+\subsubsection{readLandRequest}
+Retrieves land request data:
+\begin{itemize}
+    \item Fetches data by receipt number
+    \item Returns complete request information
+    \item Includes full action history
+\end{itemize}
+
+\subsubsection{Query Functions}
+\begin{itemize}
+    \item \textbf{getAllLandRequests}: Returns all land requests
+    \item \textbf{getLandRequestsByStatus}: Filters by status
+    \item \textbf{getLandRequestsByAssignee}: Filters by current assignee
+    \item \textbf{getLandRequestHistory}: Returns action history
+\end{itemize}
+
+\subsubsection{Document Management}
+\begin{itemize}
+    \item \textbf{storeDocumentHash}: Stores IPFS hash on blockchain
+    \item \textbf{verifyDocument}: Verifies document integrity
+    \item \textbf{issuePattaCertificate}: Records certificate issuance
+    \item \textbf{verifyPattaCertificate}: Verifies certificate authenticity
+\end{itemize}
+
+\subsection{CouchDB Integration}
+The chaincode includes CouchDB indexes for efficient querying:
+
+\begin{lstlisting}[language=json]
+{
+  "index": {
+    "fields": ["status"]
+  },
+  "name": "status-index",
+  "type": "json"
+}
+\end{lstlisting}
+
+\section{API Layer Implementation}
+
+\subsection{Fabric-API Server}
+The fabric-api server provides REST endpoints for blockchain operations:
+
+\subsubsection{Key Endpoints}
+\begin{itemize}
+    \item \textbf{POST /api/landrequests/create}: Create land request
+    \item \textbf{POST /api/landrequests/update}: Update request status
+    \item \textbf{GET /api/landrequests}: Query land requests
+    \item \textbf{GET /api/landrequests/history}: Get action history
+    \item \textbf{POST /api/patta/issue}: Issue patta certificate
+\end{itemize}
+
+\subsubsection{Role-Based Organization Mapping}
+\begin{lstlisting}[language=javascript]
+const orgRoleMap = {
+    // Org1
+    'clerk': 'org1',
+    'superintendent': 'org1',
+    'project_officer': 'org1',
+    
+    // Org2
+    'mro': 'org2',
+    'surveyor': 'org2',
+    'revenue_inspector': 'org2',
+    'vro': 'org2',
+    
+    // Org3
+    'revenue_dept_officer': 'org3',
+    'joint_collector': 'org3',
+    'district_collector': 'org3',
+    'ministry_welfare': 'org3'
+};
+\end{lstlisting}
+
+\subsection{Client API Routes}
+
+\subsubsection{Authentication Routes}
+\begin{itemize}
+    \item \textbf{POST /api/users/register}: User registration
+    \item \textbf{POST /api/officials/register}: Official registration
+    \item \textbf{POST /api/auth/login}: User login
+    \item \textbf{POST /api/officiallogin}: Official login
+\end{itemize}
+
+\subsubsection{Land Request Routes}
+\begin{itemize}
+    \item \textbf{POST /api/land-requests/create}: Create land request
+    \item \textbf{GET /api/dashboard/applications}: Get assigned applications
+    \item \textbf{POST /api/dashboard/action}: Process approval/rejection
+    \item \textbf{POST /api/patta/generate}: Generate patta certificate
+\end{itemize}
+
+\subsubsection{Document Management}
+\begin{itemize}
+    \item \textbf{POST /api/ipfs/upload}: Upload to IPFS
+    \item \textbf{GET /api/documents/view}: View documents
+    \item \textbf{POST /api/survey/upload}: Upload survey data
+\end{itemize}
+
+\section{Frontend Implementation}
+
+\subsection{Application Structure}
+The Next.js application follows the app router architecture:
+
+\begin{lstlisting}[language=bash]
+src/app/
+├── page.tsx                    # Landing page
+├── layout.tsx                  # Root layout
+├── globals.css                 # Global styles
+├── userlogin/                  # User authentication
+├── userregistration/
+├── officiallogin/
+├── officialregistration/
+├── dashboard/                  # User dashboard
+├── official-dashboard/         # Official dashboard
+├── api/                        # API routes
+└── components/                 # Reusable components
+\end{lstlisting}
+
+\subsection{Key Components}
+
+\subsubsection{Dashboard Components}
+\begin{itemize}
+    \item \textbf{OfficialDashboard}: Main dashboard for officials
+    \item \textbf{DashboardHeader}: Navigation header
+    \item \textbf{ApplicationHistory}: Action timeline component
+    \item \textbf{OTPModal}: OTP verification modal
+\end{itemize}
+
+\subsubsection{Role-Specific Components}
+\begin{itemize}
+    \item \textbf{ClerkFields}: Clerk-specific form fields
+    \item \textbf{MROFields}: MRO-specific form fields
+    \item \textbf{SurveyorFields}: Surveyor-specific form fields
+    \item \textbf{DistrictCollectorFields}: District collector fields
+\end{itemize}
+
+\subsection{Workflow Implementation}
+
+\subsubsection{Approval Hierarchy}
+The system implements a hierarchical approval workflow:
+
+\begin{enumerate}
+    \item \textbf{Clerk} $\rightarrow$ Document intake and initial verification
+    \item \textbf{Superintendent} $\rightarrow$ Application review
+    \item \textbf{Project Officer} $\rightarrow$ Project assessment
+    \item \textbf{MRO} $\rightarrow$ Mandal-level approval
+    \item \textbf{Surveyor} $\rightarrow$ Land survey and verification
+    \item \textbf{Revenue Inspector} $\rightarrow$ Revenue record inspection
+    \item \textbf{VRO} $\rightarrow$ Village-level verification
+    \item \textbf{Revenue Dept Officer} $\rightarrow$ Revenue department approval
+    \item \textbf{Joint Collector} $\rightarrow$ District-level oversight
+    \item \textbf{District Collector} $\rightarrow$ District administration
+    \item \textbf{Ministry of Welfare} $\rightarrow$ Final approval and patta issuance
+\end{enumerate}
+
+\subsubsection{Status Management}
+\begin{lstlisting}[language=javascript]
+const STATUS_MAP = {
+  'clerk': 'with_clerk',
+  'superintendent': 'with_superintendent',
+  'project_officer': 'with_projectofficer',
+  'mro': 'with_mro',
+  'surveyor': 'with_surveyor',
+  'revenue_inspector': 'with_revenueinspector',
+  'vro': 'with_vro',
+  'revenue_dept_officer': 'with_revenuedeptofficer',
+  'joint_collector': 'with_jointcollector',
+  'district_collector': 'with_districtcollector',
+  'ministry_welfare': 'with_ministrywelfare'
+};
+\end{lstlisting}
+
+\section{Deployment and Configuration}
+
+\subsection{Hyperledger Fabric Network Setup}
+
+\subsubsection{3-Organization Network Installation}
+
+\textbf{Step 1: Start the Fabric Network with 3 Organizations}
+\begin{lstlisting}[language=bash]
+cd fabric-samples-full/test-network
+
+# Start network with 3 orgs, create channel, use CouchDB
+./network.sh up createChannel -ca -s couchdb
+\end{lstlisting}
+
+\textbf{Step 2: Add Org3 to the Network}
+\begin{lstlisting}[language=bash]
+# Navigate to addOrg3 directory
+cd addOrg3
+
+# Add Org3 to existing network
+./addOrg3.sh up
+\end{lstlisting}
+
+\subsubsection{Chaincode Deployment Process}
+
+\textbf{Step 3: Package the Chaincode}
+\begin{lstlisting}[language=bash]
+# From test-network directory
+cd ../test-network
+
+# Package landrecords chaincode
+peer lifecycle chaincode package landrecords.tar.gz \
+  --path ../../chaincode/landrecords \
+  --lang node \
+  --label landrecords_1.0
+\end{lstlisting}
+
+\textbf{Step 4: Install Chaincode on All Organizations}
+
+\textbf{Install on Org1 (Peer0):}
+\begin{lstlisting}[language=bash]
+# Set Org1 environment
+export PATH=${PWD}/../bin:$PATH
+export FABRIC_CFG_PATH=$PWD/../config/
+
+# Install on Org1 peer
+peer lifecycle chaincode install landrecords.tar.gz
+\end{lstlisting}
+
+\textbf{Install on Org2 (Peer0):}
+\begin{lstlisting}[language=bash]
+# Switch to Org2
+export CORE_PEER_TLS_ENABLED=true
+export CORE_PEER_LOCALMSPID="Org2MSP"
+export CORE_PEER_TLS_ROOTCERT_FILE=${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt
+export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
+export CORE_PEER_ADDRESS=localhost:9051
+
+# Install on Org2 peer
+peer lifecycle chaincode install landrecords.tar.gz
+\end{lstlisting}
+
+\textbf{Install on Org3 (Peer0):}
+\begin{lstlisting}[language=bash]
+# Switch to Org3
+export CORE_PEER_TLS_ENABLED=true
+export CORE_PEER_LOCALMSPID="Org3MSP"
+export CORE_PEER_TLS_ROOTCERT_FILE=${PWD}/organizations/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls/ca.crt
+export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp
+export CORE_PEER_ADDRESS=localhost:11051
+
+# Install on Org3 peer
+peer lifecycle chaincode install landrecords.tar.gz
+\end{lstlisting}
+
+\textbf{Step 5: Approve Chaincode for All Organizations}
+
+\textbf{Approve for Org1:}
+\begin{lstlisting}[language=bash]
+# Switch back to Org1
+export CORE_PEER_TLS_ENABLED=true
+export CORE_PEER_LOCALMSPID="Org1MSP"
+export CORE_PEER_TLS_ROOTCERT_FILE=${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+export CORE_PEER_ADDRESS=localhost:7051
+
+# Approve for Org1
+peer lifecycle chaincode approveformyorg \
+  -o localhost:7050 \
+  --ordererTLSHostnameOverride orderer.example.com \
+  --channelID mychannel \
+  --name landrecords \
+  --version 1.0 \
+  --package-id $CC_PACKAGE_ID \
+  --sequence 1 \
+  --tls \
+  --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+\end{lstlisting}
+
+\textbf{Approve for Org2:}
+\begin{lstlisting}[language=bash]
+# Switch to Org2
+export CORE_PEER_TLS_ENABLED=true
+export CORE_PEER_LOCALMSPID="Org2MSP"
+export CORE_PEER_TLS_ROOTCERT_FILE=${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt
+export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
+export CORE_PEER_ADDRESS=localhost:9051
+
+# Approve for Org2
+peer lifecycle chaincode approveformyorg \
+  -o localhost:7050 \
+  --ordererTLSHostnameOverride orderer.example.com \
+  --channelID mychannel \
+  --name landrecords \
+  --version 1.0 \
+  --package-id $CC_PACKAGE_ID \
+  --sequence 1 \
+  --tls \
+  --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+\end{lstlisting}
+
+\textbf{Approve for Org3:}
+\begin{lstlisting}[language=bash]
+# Switch to Org3
+export CORE_PEER_TLS_ENABLED=true
+export CORE_PEER_LOCALMSPID="Org3MSP"
+export CORE_PEER_TLS_ROOTCERT_FILE=${PWD}/organizations/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls/ca.crt
+export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp
+export CORE_PEER_ADDRESS=localhost:11051
+
+# Approve for Org3
+peer lifecycle chaincode approveformyorg \
+  -o localhost:7050 \
+  --ordererTLSHostnameOverride orderer.example.com \
+  --channelID mychannel \
+  --name landrecords \
+  --version 1.0 \
+  --package-id $CC_PACKAGE_ID \
+  --sequence 1 \
+  --tls \
+  --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+\end{lstlisting}
+
+\textbf{Step 6: Commit Chaincode to Channel}
+\begin{lstlisting}[language=bash]
+# Switch back to Org1 for commit
+export CORE_PEER_TLS_ENABLED=true
+export CORE_PEER_LOCALMSPID="Org1MSP"
+export CORE_PEER_TLS_ROOTCERT_FILE=${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+export CORE_PEER_ADDRESS=localhost:7051
+
+# Commit chaincode
+peer lifecycle chaincode commit \
+  -o localhost:7050 \
+  --ordererTLSHostnameOverride orderer.example.com \
+  --channelID mychannel \
+  --name landrecords \
+  --version 1.0 \
+  --sequence 1 \
+  --tls \
+  --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem \
+  --peerAddresses localhost:7051 \
+  --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt \
+  --peerAddresses localhost:9051 \
+  --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt \
+  --peerAddresses localhost:11051 \
+  --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls/ca.crt
+\end{lstlisting}
+
+\subsubsection{Verification Commands}
+
+\textbf{Check Chaincode Status:}
+\begin{lstlisting}[language=bash]
+peer lifecycle chaincode querycommitted \
+  --channelID mychannel \
+  --name landrecords
+\end{lstlisting}
+
+\textbf{Test Chaincode:}
+\begin{lstlisting}[language=bash]
+# Query all land requests (should return empty initially)
+peer chaincode query \
+  -C mychannel \
+  -n landrecords \
+  -c '{"Args":["getAllLandRequests"]}'
+\end{lstlisting}
+
+\subsection{Application Deployment}
+
+\subsubsection{Environment Configuration}
+\begin{lstlisting}[language=bash]
+# Client (.env.local)
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/eland-records
+NEXT_PUBLIC_API_URL=http://localhost:3000
+PINATA_JWT=your_pinata_jwt_token
+
+# Fabric-API (.env)
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/eland-records
+\end{lstlisting}
+
+\subsubsection{Service Startup}
+\begin{lstlisting}[language=bash]
+# Terminal 1: Fabric-API Server
+cd fabric-api
+node api.js
+
+# Terminal 2: Client Application
+cd client
+npm run dev
+
+# Terminal 3: MongoDB Server (if using local)
+mongod
+\end{lstlisting}
+
+\subsubsection{Access URLs}
+\begin{itemize}
+    \item \textbf{Web Application}: http://localhost:3000
+    \item \textbf{Fabric-API}: http://localhost:4040
+    \item \textbf{MongoDB}: mongodb://localhost:27017
+\end{itemize}
+
+\section{Security Implementation}
+
+\subsection{Authentication and Authorization}
+
+\subsubsection{Password Security}
+\begin{itemize}
+    \item Bcrypt hashing with salt rounds
+    \item Secure password policies
+    \item Session-based authentication
+\end{itemize}
+
+\subsubsection{Role-Based Access Control}
+\begin{itemize}
+    \item 11 distinct official roles
+    \item Organization-based permissions
+    \item API-level authorization checks
+\end{itemize}
+
+\subsubsection{Blockchain Security}
+\begin{itemize}
+    \item Cryptographic signatures for all transactions
+    \item Immutable audit trails
+    \item Decentralized consensus
+    \item Private data collections for sensitive information
+\end{itemize}
+
+\subsection{Data Protection}
+
+\subsubsection{Document Security}
+\begin{itemize}
+    \item IPFS decentralized storage
+    \item SHA-256 hash verification
+    \item Access control based on user roles
+\end{itemize}
+
+\subsubsection{Network Security}
+\begin{itemize}
+    \item TLS encryption for all communications
+    \item Certificate-based authentication
+    \item Private channels for sensitive operations
+\end{itemize}
+
+\section{Testing and Validation}
+
+\subsection{Unit Testing}
+\begin{itemize}
+    \item Chaincode function testing
+    \item API endpoint validation
+    \item Component testing with Jest
+    \item Database operation verification
+\end{itemize}
+
+\subsection{Integration Testing}
+\begin{itemize}
+    \item End-to-end workflow testing
+    \item Cross-service communication
+    \item Blockchain synchronization validation
+    \item Document upload and retrieval
+\end{itemize}
+
+\subsection{Performance Testing}
+\begin{itemize}
+    \item Concurrent user load testing
+    \item Blockchain transaction throughput
+    \item Database query performance
+    \item File upload/download speeds
+\end{itemize}
+
+\section{Challenges and Solutions}
+
+\subsection{Technical Challenges}
+
+\subsubsection{Chaincode Deployment Issues}
+\textbf{Problem}: Metadata file path validation errors during packaging
+\textbf{Solution}: Corrected META-INF directory structure and added CouchDB indexes
+
+\subsubsection{Organization Migration}
+\textbf{Problem}: Org3 setup failures requiring user migration
+\textbf{Solution}: Implemented flexible role mapping and user reassignment
+
+\subsubsection{Blockchain Synchronization}
+\textbf{Problem}: Ensuring MongoDB and Fabric data consistency
+\textbf{Solution}: Implemented dual-write pattern with error handling
+
+\subsubsection{Cross-Service Communication}
+\textbf{Problem}: Coordinating between Next.js, Fabric-API, and blockchain
+\textbf{Solution}: RESTful API design with comprehensive error handling
+
+\subsection{Business Challenges}
+
+\subsubsection{Complex Approval Hierarchy}
+\textbf{Problem}: Managing 11-tier approval workflow
+\textbf{Solution}: Automated status transitions and role-based routing
+
+\subsubsection{Document Management}
+\textbf{Problem}: Secure storage and verification of land documents
+\textbf{Solution}: IPFS integration with blockchain hash verification
+
+\subsubsection{User Experience}
+\textbf{Problem}: Complex forms and workflows for end users
+\textbf{Solution}: Progressive disclosure and contextual help
+
+\section{Future Enhancements}
+
+\subsection{Advanced Features}
+\begin{itemize}
+    \item \textbf{Mobile Application}: Native mobile apps for field officials
+    \item \textbf{AI-Powered Verification}: Automated document verification
+    \item \textbf{Integration APIs}: Third-party system integrations
+    \item \textbf{Advanced Analytics}: Dashboard with insights and reports
+    \item \textbf{Multi-language Support}: Localization for regional languages
+\end{itemize}
+
+\subsection{Technical Improvements}
+\begin{itemize}
+    \item \textbf{Microservices Architecture}: Decompose monolithic services
+    \item \textbf{Event-Driven Architecture}: Real-time notifications
+    \item \textbf{Advanced Security}: Zero-knowledge proofs and encryption
+    \item \textbf{Scalability}: Horizontal scaling and load balancing
+    \item \textbf{Monitoring}: Comprehensive logging and metrics
+\end{itemize}
+
+\subsection{Regulatory Compliance}
+\begin{itemize}
+    \item \textbf{GDPR Compliance}: Data protection and privacy
+    \item \textbf{Audit Trails}: Enhanced compliance reporting
+    \item \textbf{Digital Signatures}: Legally binding electronic signatures
+    \item \textbf{Regulatory Reporting}: Automated compliance reports
+\end{itemize}
+
+\section{Conclusion}
+
+The E-Land Records Management System successfully demonstrates the practical application of blockchain technology in government land administration. The implementation provides:
+
+\begin{itemize}
+    \item \textbf{Secure and Transparent}: Blockchain ensures data integrity and auditability
+    \item \textbf{Efficient Workflow}: Automated approval processes reduce processing time
+    \item \textbf{User-Friendly Interface}: Intuitive design for both citizens and officials
+    \item \textbf{Scalable Architecture}: Modular design supports future enhancements
+    \item \textbf{Robust Security}: Multi-layer security with role-based access control
+\end{itemize}
+
+The system addresses critical pain points in traditional land management systems while establishing a foundation for digital transformation in government services. The successful integration of Hyperledger Fabric with modern web technologies proves the viability of blockchain solutions for enterprise applications.
+
+\subsection{Lessons Learned}
+\begin{enumerate}
+    \item Blockchain integration requires careful planning for data synchronization
+    \item Role-based access control is crucial for multi-organization systems
+    \item User experience design is essential for complex administrative workflows
+    \item Comprehensive testing is vital for distributed systems
+    \item Documentation and monitoring are critical for system maintenance
+\end{enumerate}
+
+\subsection{Impact and Benefits}
+The implementation provides significant benefits:
+
+\begin{itemize}
+    \item \textbf{Transparency}: Citizens can verify land records independently
+    \item \textbf{Efficiency}: Reduced processing time from weeks to days
+    \item \textbf{Cost Savings}: Digital processes eliminate paper-based workflows
+    \item \textbf{Trust}: Immutable records prevent disputes and corruption
+    \item \textbf{Accessibility}: Online services available 24/7
+\end{itemize}
+
+This project establishes a blueprint for blockchain-based government applications and demonstrates the potential for technology to transform public services.
+
+\newpage
+
+\section{Appendices}
+
+\subsection{Appendix A: Installation and Setup Guide}
+
+\subsubsection{Prerequisites}
+\begin{enumerate}
+    \item Node.js 18+ installed
+    \item Docker and Docker Compose installed
+    \item Git installed
+    \item MongoDB Atlas account or local MongoDB
+    \item IPFS/Pinata account for document storage
+\end{enumerate}
+
+\subsubsection{Complete Installation Steps}
+
+\textbf{1. Clone and Setup Project}
+\begin{lstlisting}[language=bash]
+git clone <repository-url>
+cd e-land-records
+\end{lstlisting}
+
+\textbf{2. Install Dependencies}
+\begin{lstlisting}[language=bash]
+# Client dependencies
+cd client
+npm install
+
+# Fabric-API dependencies
+cd ../fabric-api
+npm install
+\end{lstlisting}
+
+\textbf{3. Environment Configuration}
+\begin{lstlisting}[language=bash]
+# Client .env.local
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/eland-records
+NEXT_PUBLIC_API_URL=http://localhost:3000
+PINATA_JWT=your_pinata_jwt_token
+
+# Fabric-API .env
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/eland-records
+\end{lstlisting}
+
+\textbf{4. Deploy Hyperledger Fabric Network}
+Follow the detailed 3-organization network setup and chaincode deployment steps in Section 6.1.
+
+\textbf{5. Start All Services}
+\begin{lstlisting}[language=bash]
+# Terminal 1: Fabric-API
+cd fabric-api
+node api.js
+
+# Terminal 2: Client Application
+cd client
+npm run dev
+
+# Terminal 3: MongoDB (if using local)
+mongod
+\end{lstlisting}
+
+\subsubsection{Troubleshooting}
+
+\textbf{Common Issues:}
+\begin{itemize}
+    \item \textbf{Port conflicts}: Change ports in configuration files
+    \item \textbf{MongoDB connection}: Verify connection string and network access
+    \item \textbf{Fabric network}: Ensure Docker is running and ports are available
+    \item \textbf{Chaincode deployment}: Check logs for packaging errors
+    \item \textbf{Org3 setup}: Ensure addOrg3.sh completes successfully
+\end{itemize}
+
+\subsection{Appendix B: API Endpoints Summary}
+
+\subsubsection{Fabric-API Endpoints}
+\begin{itemize}
+    \item \textbf{POST /api/landrequests/create}: Create land request on blockchain
+    \item \textbf{POST /api/landrequests/update}: Update request status
+    \item \textbf{GET /api/landrequests}: Query land requests by role
+    \item \textbf{POST /api/patta/issue}: Issue patta certificate
+\end{itemize}
+
+\subsubsection{Client API Endpoints}
+\begin{itemize}
+    \item \textbf{POST /api/users/register}: User registration
+    \item \textbf{POST /api/officials/register}: Official registration
+    \item \textbf{POST /api/land-requests/create}: Create land application
+    \item \textbf{POST /api/dashboard/action}: Process approval/rejection
+    \item \textbf{POST /api/patta/generate}: Generate patta certificate
+\end{itemize}
+
+\end{document}

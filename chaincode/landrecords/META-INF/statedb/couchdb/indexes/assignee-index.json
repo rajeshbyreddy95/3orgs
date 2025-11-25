@@ -1,0 +1,7 @@
+{
+  "index": {
+    "fields": ["currentAssignee"]
+  },
+  "name": "assignee-index",
+  "type": "json"
+}
